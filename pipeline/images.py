@@ -99,10 +99,25 @@ def _deapi_generate(
                 if not image_url:
                     raise RuntimeError(f"Completed but no result_url: {poll_data}")
 
-                img_resp = client.get(image_url, timeout=60.0)
-                img_resp.raise_for_status()
-                print(f"      DeAPI done (polled {attempt}x)")
-                return img_resp.content
+                for download_try in range(5):
+                    img_resp = client.get(image_url, timeout=60.0)
+                    if img_resp.status_code in (429, 500, 502, 503, 504):
+                        wait = 3 * (download_try + 1)
+                        print(
+                            f"      DeAPI result download returned "
+                            f"{img_resp.status_code} — retrying in {wait}s "
+                            f"({download_try + 1}/5)…"
+                        )
+                        time.sleep(wait)
+                        continue
+                    img_resp.raise_for_status()
+                    print(f"      DeAPI done (polled {attempt}x)")
+                    return img_resp.content
+
+                raise RuntimeError(
+                    f"DeAPI result download failed after 5 retries: "
+                    f"HTTP {img_resp.status_code}"
+                )
 
             if status in ("failed", "error"):
                 raise RuntimeError(f"DeAPI image failed: {poll_data}")
