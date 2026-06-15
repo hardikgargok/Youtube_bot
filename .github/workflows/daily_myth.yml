@@ -1,10 +1,8 @@
 name: Daily Hindi Myth Short
 
 on:
-  schedule:
-    # 06:30 IST = 01:00 UTC; 18:30 IST = 13:00 UTC
-    - cron: "0 1 * * *"
-    - cron: "0 13 * * *"
+  # Keep manual until YT_REFRESH_TOKEN_MYTH authorizes the intended mythology
+  # channel. The default token belongs to the primary Shorts channel.
   workflow_dispatch:
     inputs:
       topic:

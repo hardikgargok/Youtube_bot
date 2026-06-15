@@ -15,6 +15,7 @@ Prerequisites:
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -49,16 +50,22 @@ def main() -> None:
 
     print("Opening browser for Google OAuth…")
     flow = InstalledAppFlow.from_client_secrets_file(str(client_secret), SCOPES)
-    creds = flow.run_local_server(port=0)
+    creds = flow.run_local_server(
+        port=0,
+        open_browser=os.environ.get("YT_AUTH_NO_BROWSER", "").strip() != "1",
+        authorization_prompt_message="AUTH_URL={url}",
+        login_hint=os.environ.get("YT_AUTH_EMAIL", "").strip() or None,
+        prompt="consent",
+    )
 
     SECRETS.mkdir(parents=True, exist_ok=True)
     token_out.write_text(creds.to_json(), encoding="utf-8")
-    print(f"\n✅ Token saved to {token_out}")
+    print(f"\nToken saved to {token_out}")
 
     # Also print the refresh token so user can add it to GitHub Secrets
     token_data = json.loads(creds.to_json())
-    print("\n── For GitHub Actions ──")
-    print("Add these as Repository Secrets (Settings → Secrets → Actions):\n")
+    print("\n-- For GitHub Actions --")
+    print("Add these as Repository Secrets (Settings > Secrets > Actions):\n")
     print(f"  YT_REFRESH_TOKEN = {token_data.get('refresh_token', '???')}")
     print(f"  YT_CLIENT_ID     = {token_data.get('client_id', '???')}")
     print(f"  YT_CLIENT_SECRET_VALUE = {token_data.get('client_secret', '???')}")
