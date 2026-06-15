@@ -21,7 +21,8 @@ env:
   YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
   YT_CLIENT_SECRET_VALUE: ${{ secrets.YT_CLIENT_SECRET_VALUE }}
   YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
-  EDGE_TTS_VOICE: "en-US-ChristopherNeural"
+  DEAPI_TTS_MODEL: "Kokoro"
+  DEAPI_TTS_VOICE: "am_michael"
 
 jobs:
   generate-and-upload:

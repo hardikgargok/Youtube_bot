@@ -36,6 +36,18 @@ LANG_WORD_TARGETS = {
 # Bilingual presets override per variant; these are fallbacks only.
 DEFAULT_MIN_WORDS = {"hi": 80, "en": 80}
 
+ORIGINALITY_RULES = """
+GLOBAL ORIGINALITY AND PLATFORM-SAFETY RULES:
+- Create entirely new wording and a new sequence of events for this specific video.
+- Never copy or closely paraphrase any article, book, film, show, game, viral post, or existing video.
+- Never include song lyrics, poems, scripts, slogans, catchphrases, or long quotations.
+- Do not use copyrighted fictional characters, franchise names, logos, brands, celebrities, or real-person likenesses.
+- Image prompts must request newly generated scenes with no text, logos, watermarks, trademarks, or recognizable IP.
+- No sexual content, nudity, graphic injury, gore, hate, harassment, dangerous instructions, or deceptive claims.
+- Do not target young children or describe the video as children's content.
+- Do not claim synthetic scenes are authentic photos, recordings, evidence, news footage, or real events.
+"""
+
 
 def _lang_label(lang: str) -> str:
     return {"en": "English", "hi": "Hindi (Devanagari script)"}.get(lang, lang)
@@ -52,6 +64,7 @@ def generate_short_pack(
     user = (
         f"Channel style: {preset['label']}.\n"
         f"Create ONE YouTube Short.\n"
+        f"{ORIGINALITY_RULES}\n"
     )
     if topic_hint:
         user += f"Topic idea from creator: {topic_hint}\n"

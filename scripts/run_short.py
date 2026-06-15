@@ -4,7 +4,7 @@ Fully automated YouTube Short pipeline.
 
 Single-variant flow:
   Groq → narration + image prompts
-  Edge TTS → audio (30-40s)
+  Configured TTS provider → audio (30-40s)
   DeAPI → images
   Captions → SRT
   FFmpeg → 9:16 vertical MP4
@@ -14,7 +14,7 @@ Bilingual flow (preset has `variants`):
   Groq → image_prompts + per-language {title, description, narration}
   DeAPI → images (once, shared)
   For each variant:
-    Edge TTS → audio in that language with that voice
+    Configured TTS provider → audio in that language with that voice
     Captions → SRT
     FFmpeg → MP4 with variant-specific font
     YouTube upload (optional, per-channel token)
@@ -45,7 +45,6 @@ load_dotenv(REPO_ROOT / "scripts" / ".env")
 
 from pipeline.captions import build_srt
 from pipeline.channel_presets import get_preset, list_channel_ids
-from pipeline.edge_tts_synth import synthesize_full
 from pipeline.groq_script import generate_short_pack
 from pipeline.images import DEFAULT_NEGATIVE, full_visual_prompt, save_scene_image
 from pipeline.render_short import render_vertical_short
@@ -59,6 +58,7 @@ def _render_and_upload(
     title: str,
     description: str,
     voice: str | None,
+    tts_provider: str,
     font_file: str,
     font_name: str,
     image_paths: list,
@@ -72,7 +72,14 @@ def _render_and_upload(
     print(f"\n━━━ Variant: {variant_label} ━━━")
 
     audio_path = run_dir / f"voiceover{suffix}.mp3"
-    print(f"② Edge TTS ({voice or 'default'})…")
+    if tts_provider == "deapi":
+        from pipeline.deapi_tts import synthesize_full
+    elif tts_provider == "edge":
+        from pipeline.edge_tts_synth import synthesize_full
+    else:
+        raise ValueError(f"Unknown TTS provider: {tts_provider}")
+
+    print(f"② {tts_provider} TTS ({voice or 'default'})…")
     total_dur, sentence_timings = synthesize_full(narration, audio_path, voice=voice)
     print(f"   Audio: {total_dur:.1f}s ({len(sentence_timings)} sentences tracked)")
     if total_dur > 55:
@@ -207,6 +214,7 @@ def main() -> None:
                 title=node["youtube_title"],
                 description=node.get("youtube_description", ""),
                 voice=v.get("tts_voice"),
+                tts_provider=v.get("tts_provider", "edge"),
                 font_file=v.get("caption_font", "CreepsterCaps.ttf"),
                 font_name=v.get("caption_font_name", "Creepster"),
                 image_paths=image_paths,
@@ -223,6 +231,7 @@ def main() -> None:
             title=title,
             description=pack.get("youtube_description", ""),
             voice=preset.get("tts_voice") or os.environ.get("EDGE_TTS_VOICE"),
+            tts_provider=preset.get("tts_provider", "edge"),
             font_file=preset.get("caption_font", "CreepsterCaps.ttf"),
             font_name=preset.get("caption_font_name", "Creepster"),
             image_paths=image_paths,

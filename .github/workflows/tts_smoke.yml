@@ -1,0 +1,39 @@
+name: Temporary TTS Smoke Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DEAPI_TOKEN: ${{ secrets.DEAPI_TOKEN }}
+      DEAPI_TTS_MODEL: Kokoro
+      DEAPI_TTS_VOICE: am_michael
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install -r requirements.txt
+      - name: Generate licensed speech sample
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from pipeline.deapi_tts import synthesize_full
+
+          output = Path("tts-smoke.mp3")
+          duration, timings = synthesize_full(
+              "This is an original voice-generation test for the YouTube automation.",
+              output,
+              voice="am_michael",
+          )
+          assert output.stat().st_size > 1000
+          assert duration > 1
+          assert timings
+          print(f"TTS smoke test passed: {duration:.1f}s")
+          output.unlink()
+          PY

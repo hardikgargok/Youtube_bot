@@ -14,6 +14,7 @@ class Variant(TypedDict, total=False):
     lang: str  # "en", "hi", etc. used as key in Groq response
     label: str  # human-readable for logs
     tts_voice: str  # Edge TTS voice (e.g. "hi-IN-MadhurNeural")
+    tts_provider: str  # "deapi" or legacy "edge"
     caption_font: str  # font filename inside assets/fonts/
     caption_font_name: str  # FFmpeg-visible font family name
     yt_token_env: str  # env var name for YouTube refresh token (e.g. "YT_REFRESH_TOKEN_HI")
@@ -31,6 +32,7 @@ class ChannelPreset(TypedDict, total=False):
     # Single-variant fields (backward compat — used when `variants` is absent):
     language: str
     tts_voice: str
+    tts_provider: str
     caption_font: str
     caption_font_name: str
     min_words: int  # min word count for narration validation (single-variant)
@@ -303,6 +305,8 @@ PRESETS: dict[str, ChannelPreset] = {
         "id": "ghost_stories",
         "label": "Ghost / horror storytime Short",
         "min_words": 100,
+        "tts_provider": "deapi",
+        "tts_voice": "am_michael",
         "groq_system_hint": (
             "You write spooky ghost story Shorts for YouTube. "
             "CRITICAL LENGTH RULE: The TOTAL word count across ALL 6 segments MUST be 120-140 words. "
@@ -310,7 +314,10 @@ PRESETS: dict[str, ChannelPreset] = {
             "This produces 35-45 seconds of audio when read aloud. "
             "Tone: eerie, suspenseful, creepy but NOT gory or violent. "
             "Segment 1: hook that stops scrolling. Last segment: chilling twist or unanswered question. "
-            "All stories fictional. Original characters. PG-13. No hashtags in narration."
+            "All stories fictional. Original characters. PG-13. No hashtags in narration. "
+            "Never use copyrighted characters, franchise names, celebrity likenesses, song lyrics, "
+            "famous quotes, brand slogans, or recognizable plots from films, books, games, or shows. "
+            "Do not present the story as a real event. Invent every name, place, object, and plot detail."
         ),
         "segment_count": 6,
         "image_style_suffix": (
