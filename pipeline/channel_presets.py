@@ -47,6 +47,73 @@ class ChannelPreset(TypedDict, total=False):
 
 
 PRESETS: dict[str, ChannelPreset] = {
+    "general_stories": {
+        "id": "general_stories",
+        "label": "Original cinematic storytime Shorts with varied everyday themes",
+        "min_words": 105,
+        "tts_provider": "deapi",
+        "tts_voice": "am_michael",
+        "groq_system_hint": (
+            "You write highly engaging original storytime Shorts for a broad general audience. "
+            "Every story must feel natural, specific, and emotionally believable, with a strong opening, "
+            "clear progression, and satisfying twist, realization, or payoff. Use 120-145 words total, "
+            "about 35-50 seconds spoken. Vary genre and mood: emotional, funny, mysterious, inspiring, "
+            "awkward, suspenseful, surprising, or thought-provoking. Horror may appear occasionally but "
+            "must never dominate. Use realistic dialogue sparingly and natural human phrasing. "
+            "All people, places, and events are fictional and original. Never claim a fictional story is "
+            "real news or evidence. PG-13, no graphic violence, no sexual content, no hate, no dangerous "
+            "instructions, and no hashtags in narration. Never use copyrighted characters, franchises, "
+            "celebrity likenesses, song lyrics, famous quotes, slogans, or recognizable existing plots."
+        ),
+        "segment_count": 6,
+        "image_style_suffix": (
+            ", cinematic editorial story illustration, natural human expressions, realistic proportions, "
+            "rich environmental detail, subtle film lighting, modern color grading, varied camera angles, "
+            "professional vertical video visual, no text, no captions, no watermark, no logos"
+        ),
+        "image_negative_prompt": (
+            "watermark, logo, text, title, signature, celebrity, copyrighted character, brand mascot, "
+            "distorted face, extra limbs, broken anatomy, low quality, blurry, gore, blood, nudity"
+        ),
+        "topic_pool": [
+            "a stranger returning a wallet with an unexpected note",
+            "a quiet employee discovering why the office cleaner stayed late",
+            "two passengers accidentally exchanging identical bags",
+            "a missed train leading to an important friendship",
+            "a delivery arriving at the wrong apartment",
+            "a student finding an old message hidden inside a library book",
+            "a family dinner interrupted by a surprising confession",
+            "a shopkeeper recognizing a customer from twenty years ago",
+            "a phone call meant for someone else changing one evening",
+            "a small lie at work growing into an awkward situation",
+            "a traveler helping someone without sharing a common language",
+            "a forgotten birthday turning into an unexpected celebration",
+            "a neighbor leaving mysterious helpful gifts",
+            "a job interview taking an unusual but meaningful turn",
+            "a child teaching two arguing adults a simple lesson",
+            "a restaurant order revealing a long-lost connection",
+            "a photographer noticing the same stranger in old pictures",
+            "a broken elevator forcing rivals to finally talk",
+            "a bus driver waiting for one passenger every morning",
+            "a wrong number becoming a source of encouragement",
+            "a wedding guest discovering an invitation mistake",
+            "a street musician receiving an unforgettable request",
+            "a teacher learning why one student always arrived early",
+            "a tenant discovering who cared for the rooftop garden",
+            "a reunion where nobody recognizes the most successful classmate",
+            "a mysterious package containing only ordinary objects",
+            "a commuter finding handwritten advice on a train seat",
+            "a sibling keeping a harmless secret for many years",
+            "a customer complaint ending with an unexpected apology",
+            "a rainy-day act of kindness returning years later",
+            "a harmless mystery in a hotel room",
+            "a strange coincidence during a road trip",
+            "a suspenseful late-night encounter with a simple explanation",
+            "an old voicemail revealing a misunderstood memory",
+            "a contest winner choosing a surprising prize",
+            "a new employee solving a problem everyone ignored",
+        ],
+    },
     "facts": {
         "id": "facts",
         "label": "Mind-blowing facts Short (bilingual — Hindi + English)",

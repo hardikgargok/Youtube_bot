@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       channel:
-        description: "Channel preset (ghost_stories, facts, school_story, etc.)"
+        description: "Channel preset (general_stories, facts, school_story, etc.)"
         required: true
-        default: "ghost_stories"
+        default: "general_stories"
       topic:
         description: "Optional topic hint"
         required: false
@@ -50,13 +50,13 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: output/history/
-          key: story-history-${{ github.event.inputs.channel || 'ghost_stories' }}-${{ github.run_id }}
+          key: story-history-${{ github.event.inputs.channel || 'general_stories' }}-${{ github.run_id }}
           restore-keys: |
-            story-history-${{ github.event.inputs.channel || 'ghost_stories' }}-
+            story-history-${{ github.event.inputs.channel || 'general_stories' }}-
 
       - name: Generate & upload Short
         run: |
-          CHANNEL="${{ github.event.inputs.channel || 'ghost_stories' }}"
+          CHANNEL="${{ github.event.inputs.channel || 'general_stories' }}"
           TOPIC="${{ github.event.inputs.topic || '' }}"
 
           if [ -n "$TOPIC" ]; then
@@ -71,4 +71,4 @@ jobs:
         if: always()
         with:
           path: output/history/
-          key: story-history-${{ github.event.inputs.channel || 'ghost_stories' }}-${{ github.run_id }}
+          key: story-history-${{ github.event.inputs.channel || 'general_stories' }}-${{ github.run_id }}

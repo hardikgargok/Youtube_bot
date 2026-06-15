@@ -106,22 +106,15 @@ def upload_short(
     creds = _get_creds(refresh_token_env)
     youtube = build("youtube", "v3", credentials=creds)
 
-    disclosure = (
-        "Original AI-assisted production using newly generated visuals and synthetic narration. "
-        "No third-party music or reused footage is included."
-    )
-    full_description = f"{description.strip()}\n\n{disclosure}".strip()
-
     body = {
         "snippet": {
             "title": title[:100],
-            "description": full_description[:5000],
+            "description": description.strip()[:5000],
             "categoryId": category_id,
         },
         "status": {
             "privacyStatus": privacy_status,
             "selfDeclaredMadeForKids": False,
-            "containsSyntheticMedia": True,
             "license": "youtube",
             "embeddable": True,
             "publicStatsViewable": True,
