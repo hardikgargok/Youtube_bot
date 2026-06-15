@@ -112,7 +112,7 @@ def main() -> None:
     ap.add_argument("--channel", required=True, choices=list_channel_ids())
     ap.add_argument("--topic", default="", help="Optional topic hint for Groq.")
     ap.add_argument("--upload", action="store_true", help="Upload to YouTube after render.")
-    ap.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"])
+    ap.add_argument("--privacy", default="public", choices=["private", "unlisted", "public"])
     args = ap.parse_args()
 
     preset = get_preset(args.channel)

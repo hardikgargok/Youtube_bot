@@ -94,7 +94,7 @@ def upload_short(
     title: str,
     description: str,
     *,
-    privacy_status: str = "private",
+    privacy_status: str = "public",
     category_id: str = "24",
     refresh_token_env: str = "YT_REFRESH_TOKEN",
 ) -> str:

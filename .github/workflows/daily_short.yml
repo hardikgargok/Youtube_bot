@@ -14,15 +14,6 @@ on:
         description: "Optional topic hint"
         required: false
         default: ""
-      privacy:
-        description: "Upload visibility for manual runs"
-        required: true
-        type: choice
-        options:
-          - private
-          - unlisted
-          - public
-        default: private
 
 env:
   GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -66,12 +57,11 @@ jobs:
         run: |
           CHANNEL="${{ github.event.inputs.channel || 'ghost_stories' }}"
           TOPIC="${{ github.event.inputs.topic || '' }}"
-          PRIVACY="${{ github.event.inputs.privacy || 'public' }}"
 
           if [ -n "$TOPIC" ]; then
-            python scripts/run_short.py --channel "$CHANNEL" --topic "$TOPIC" --upload --privacy "$PRIVACY"
+            python scripts/run_short.py --channel "$CHANNEL" --topic "$TOPIC" --upload --privacy public
           else
-            python scripts/run_short.py --channel "$CHANNEL" --upload --privacy "$PRIVACY"
+            python scripts/run_short.py --channel "$CHANNEL" --upload --privacy public
           fi
 
       # Save history so next run knows what stories already exist
