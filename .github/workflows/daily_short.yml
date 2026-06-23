@@ -1,6 +1,10 @@
 name: Daily YouTube Short
 
 on:
+  schedule:
+    # Temporarily enabled for 3 days. Scheduled runs after this window skip upload.
+    - cron: "0 10 * * *"
+    - cron: "30 23 * * *"
   workflow_dispatch:
     inputs:
       channel:
@@ -27,23 +31,48 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: Check temporary upload window
+        id: upload_window
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          expires_at="2026-06-26 18:30:00 UTC"
+          now="$(date -u +%s)"
+          expires="$(date -u -d "$expires_at" +%s)"
+
+          if [ "$now" -lt "$expires" ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Scheduled upload window ended at $expires_at. Skipping."
+            echo "active=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout
+        if: steps.upload_window.outputs.active == 'true'
         uses: actions/checkout@v4
 
       - name: Setup Python
+        if: steps.upload_window.outputs.active == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
 
       - name: Install ffmpeg
+        if: steps.upload_window.outputs.active == 'true'
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
       - name: Install Python deps
+        if: steps.upload_window.outputs.active == 'true'
         run: pip install -r requirements.txt
 
       # Restore story history from previous runs (prevents repeats)
       - name: Restore history cache
+        if: steps.upload_window.outputs.active == 'true'
         uses: actions/cache/restore@v4
         with:
           path: output/history/
@@ -52,6 +81,7 @@ jobs:
             story-history-${{ github.event.inputs.channel || 'general_stories' }}-
 
       - name: Generate & upload Short
+        if: steps.upload_window.outputs.active == 'true'
         run: |
           CHANNEL="${{ github.event.inputs.channel || 'general_stories' }}"
           TOPIC="${{ github.event.inputs.topic || '' }}"
@@ -65,7 +95,7 @@ jobs:
       # Save history so next run knows what stories already exist
       - name: Save history cache
         uses: actions/cache/save@v4
-        if: always()
+        if: always() && steps.upload_window.outputs.active == 'true'
         with:
           path: output/history/
           key: story-history-${{ github.event.inputs.channel || 'general_stories' }}-${{ github.run_id }}
