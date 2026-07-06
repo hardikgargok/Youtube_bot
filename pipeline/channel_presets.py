@@ -14,7 +14,7 @@ class Variant(TypedDict, total=False):
     lang: str  # "en", "hi", etc. used as key in Groq response
     label: str  # human-readable for logs
     tts_voice: str  # Edge TTS voice (e.g. "hi-IN-MadhurNeural")
-    tts_provider: str  # "deapi" or legacy "edge"
+    tts_provider: str  # "deapi", "sfx", or legacy "edge"
     caption_font: str  # font filename inside assets/fonts/
     caption_font_name: str  # FFmpeg-visible font family name
     yt_token_env: str  # env var name for YouTube refresh token (e.g. "YT_REFRESH_TOKEN_HI")
@@ -50,8 +50,8 @@ PRESETS: dict[str, ChannelPreset] = {
     "general_stories": {
         "id": "general_stories",
         "label": "Original cinematic storytime Shorts with varied everyday themes",
-        "min_words": 105,
-        "tts_provider": "deapi",
+        "min_words": 1,
+        "tts_provider": "sfx",
         "tts_voice": "am_michael",
         "groq_system_hint": (
             "You write highly engaging original storytime Shorts for a broad general audience. "
@@ -314,18 +314,17 @@ PRESETS: dict[str, ChannelPreset] = {
         "caption_font_name": "Bebas Neue",
         "yt_token_env": "YT_REFRESH_TOKEN",
         "groq_system_hint": (
-            "You write original YouTube Shorts that feel like premium collectible diorama unboxing videos. "
-            "The format is: a strong hook, sealed box reveal, detailed parts layout, assembly moment, "
-            "hero close-ups, and a final cinematic showcase. The subject should be inspired by Indian epics, "
-            "ancient warriors, battlefields, chariots, temples, divine weapons, and museum-quality miniatures, "
-            "but every product, brand, set name, sculpt, and story angle must be fictional and original. "
-            "Do not claim the collectible is real, rare, official, or available to buy. "
-            "Never copy titles, descriptions, captions, or narration from any existing video. "
-            "Use tactile product-review language: embossed box, foam trays, painted figures, metal-look weapons, "
-            "weathered terrain, tiny banners, magnetized parts, and dramatic lighting. "
-            "Keep the narration 115-145 words, energetic, premium, and family-safe. "
-            "No hashtags in narration. IMAGE PROMPTS must be English only and must describe vertical shots "
-            "of a fictional collectible unboxing/assembly scene with no readable text."
+            "You create original no-narration YouTube Shorts in the style of premium collectible unboxing "
+            "and assembly videos. IMPORTANT: this is NOT a story video. No plot, no characters talking, "
+            "no moral, no story arc, no spoken script, and no narration. The video should feel like: "
+            "sealed box reveal, lid opening, foam tray close-up, parts laid out, hands assembling pieces, "
+            "macro detail shots, light sweeps, transition beats, and final rotating showcase. "
+            "The subject should be inspired by Indian epics, ancient warriors, battlefields, chariots, "
+            "temples, divine weapons, and museum-quality miniatures, but every product, brand, set name, "
+            "sculpt, and design must be fictional and original. Do not claim the collectible is real, rare, "
+            "official, or available to buy. IMAGE PROMPTS must be English only and must describe vertical "
+            "product/unboxing shots with no readable text. full_narration is only internal production notes "
+            "for timing and sound effects; it will NOT be spoken."
         ),
         "segment_count": 6,
         "image_style_suffix": (

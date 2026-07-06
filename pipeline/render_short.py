@@ -92,7 +92,9 @@ def render_vertical_short(
         )
 
     # ── 3. Prepare subtitles + font ──────────────────────────────────
-    shutil.copyfile(srt_path, tmp / "captions.srt")
+    use_subtitles = srt_path.is_file() and srt_path.stat().st_size > 0
+    if use_subtitles:
+        shutil.copyfile(srt_path, tmp / "captions.srt")
 
     font_path = FONTS_DIR / font_file
     rendered_font_name = "Arial"
@@ -125,11 +127,16 @@ def render_vertical_short(
 
     filter_parts: list[str] = []
 
-    if n == 1:
-        filter_parts.append(
-            f"[0:v]subtitles=captions.srt{fontsdir_arg}:"
+    def finish_video_filter(label: str) -> str:
+        if not use_subtitles:
+            return f"{label}format=yuv420p[final]"
+        return (
+            f"{label}subtitles=captions.srt{fontsdir_arg}:"
             f"force_style='{force_style}'[final]"
         )
+
+    if n == 1:
+        filter_parts.append(finish_video_filter("[0:v]"))
     else:
         prev = "[0:v]"
         for i in range(n - 1):
@@ -141,10 +148,7 @@ def render_vertical_short(
                 f"duration={FADE_DUR:.4f}:offset={offset:.4f}{out}"
             )
             prev = out
-        filter_parts.append(
-            f"{prev}subtitles=captions.srt{fontsdir_arg}:"
-            f"force_style='{force_style}'[final]"
-        )
+        filter_parts.append(finish_video_filter(prev))
 
     fc = ";\n".join(filter_parts)
 

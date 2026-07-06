@@ -76,6 +76,8 @@ def _render_and_upload(
         from pipeline.deapi_tts import synthesize_full
     elif tts_provider == "edge":
         from pipeline.edge_tts_synth import synthesize_full
+    elif tts_provider == "sfx":
+        from pipeline.sfx_audio import synthesize_full
     else:
         raise ValueError(f"Unknown TTS provider: {tts_provider}")
 

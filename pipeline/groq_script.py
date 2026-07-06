@@ -88,8 +88,18 @@ def generate_short_pack(
 def _generate_single(preset: ChannelPreset, user: str, n: int) -> dict[str, Any]:
     language = (preset.get("language") or "en").lower()
     lo, hi, blurb = LANG_WORD_TARGETS.get(language, LANG_WORD_TARGETS["en"])
+    sfx_only = (preset.get("tts_provider") or "").lower() == "sfx"
 
-    if language == "hi":
+    if sfx_only:
+        narration_rule = (
+            '"full_narration": "Internal production notes only, not spoken aloud. '
+            'Briefly list the visual rhythm and sound effects, such as whoosh, click, impact, riser, reveal."'
+        )
+        strict_extra = (
+            "- NO STORY and NO SPOKEN NARRATION. full_narration is not a voice script.\n"
+            "- full_narration should be 1-3 short production-note sentences only.\n"
+        )
+    elif language == "hi":
         narration_rule = (
             '"full_narration": "COMPLETE narration as ONE continuous paragraph in Devanagari Hindi. '
             f'This is what the voice will read aloud. MUST be {blurb}. '
@@ -153,12 +163,13 @@ STRICT RULES:
                 if not isinstance(p, str) or not p.strip():
                     raise ValueError(f"image_prompt {i} is empty")
 
-            word_count = len(narration.split())
-            min_words = preset.get("min_words", DEFAULT_MIN_WORDS.get(language, 80))
-            if word_count < min_words:
-                raise ValueError(
-                    f"Narration too short ({word_count} words, expected ≥ {min_words} for {language})"
-                )
+            if not sfx_only:
+                word_count = len(narration.split())
+                min_words = preset.get("min_words", DEFAULT_MIN_WORDS.get(language, 80))
+                if word_count < min_words:
+                    raise ValueError(
+                        f"Narration too short ({word_count} words, expected ≥ {min_words} for {language})"
+                    )
 
             return data
         except ValueError as e:
