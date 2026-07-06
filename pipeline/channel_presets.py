@@ -303,6 +303,60 @@ PRESETS: dict[str, ChannelPreset] = {
         ),
         "topic_pool": [],
     },
+    "kurukshetra_unboxing": {
+        "id": "kurukshetra_unboxing",
+        "label": "Premium mythological diorama unboxing Shorts",
+        "language": "en",
+        "min_words": 105,
+        "tts_provider": "deapi",
+        "tts_voice": "am_michael",
+        "caption_font": "BebasNeue-Regular.ttf",
+        "caption_font_name": "Bebas Neue",
+        "yt_token_env": "YT_REFRESH_TOKEN",
+        "groq_system_hint": (
+            "You write original YouTube Shorts that feel like premium collectible diorama unboxing videos. "
+            "The format is: a strong hook, sealed box reveal, detailed parts layout, assembly moment, "
+            "hero close-ups, and a final cinematic showcase. The subject should be inspired by Indian epics, "
+            "ancient warriors, battlefields, chariots, temples, divine weapons, and museum-quality miniatures, "
+            "but every product, brand, set name, sculpt, and story angle must be fictional and original. "
+            "Do not claim the collectible is real, rare, official, or available to buy. "
+            "Never copy titles, descriptions, captions, or narration from any existing video. "
+            "Use tactile product-review language: embossed box, foam trays, painted figures, metal-look weapons, "
+            "weathered terrain, tiny banners, magnetized parts, and dramatic lighting. "
+            "Keep the narration 115-145 words, energetic, premium, and family-safe. "
+            "No hashtags in narration. IMAGE PROMPTS must be English only and must describe vertical shots "
+            "of a fictional collectible unboxing/assembly scene with no readable text."
+        ),
+        "segment_count": 6,
+        "image_style_suffix": (
+            ", premium collectible product photography, cinematic tabletop unboxing, macro lens detail, "
+            "dramatic studio lighting, realistic miniature diorama, ancient Indian epic aesthetic, "
+            "rich gold and crimson accents balanced with neutral shadows, ultra detailed packaging and parts, "
+            "professional vertical YouTube Shorts frame, no readable text, no captions, no watermark, no logos"
+        ),
+        "image_negative_prompt": (
+            "real brand logo, readable text, watermark, signature, official merchandise, copied character design, "
+            "celebrity likeness, gore, blood, nudity, low quality, blurry, distorted hands, broken anatomy, "
+            "extra limbs, messy clutter, plastic toy cheap look"
+        ),
+        "topic_pool": [
+            "a fictional Kurukshetra battlefield diorama with chariots, arrows, dust, and warrior standards",
+            "a premium Arjuna-inspired archer miniature set with a celestial bow and battlefield base",
+            "a Bhishma-inspired grand warrior diorama with silver armor, banners, and arrow details",
+            "a Krishna-inspired chariot guide diorama with golden wheels and a glowing battlefield backdrop",
+            "a mace-duel arena miniature inspired by epic warriors and cracked stone terrain",
+            "a temple-forge collectible set showing divine weapons laid out in velvet trays",
+            "a royal war-camp diorama with tents, flags, shields, and miniature oil lamps",
+            "a conch-shell ceremony diorama with warriors preparing before an ancient battle",
+            "a rain-soaked battlefield collector set with muddy terrain and broken chariot parts",
+            "a sunrise command-table diorama with tiny maps, arrows, and carved wooden pieces",
+            "a mythic elephant-armor miniature set with jeweled plates and battlefield accessories",
+            "a palace training-yard diorama with bows, maces, shields, and stone archways",
+            "a grand collector box containing six fictional epic-warrior miniatures",
+            "a cinematic final-battle display base with dust clouds, banners, and dramatic shadows",
+            "a limited-style handmade miniature set of ancient armor, helmets, and weapons",
+        ],
+    },
     "school_story": {
         "id": "school_story",
         "label": "School drama / storytime Short",

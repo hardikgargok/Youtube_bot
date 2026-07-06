@@ -1,0 +1,67 @@
+name: Daily Kurukshetra Unboxing Short
+
+on:
+  schedule:
+    - cron: "0 10 * * *"
+    - cron: "30 23 * * *"
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Optional topic hint (leave empty for random premium diorama unboxing)"
+        required: false
+        default: ""
+
+env:
+  GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+  DEAPI_TOKEN: ${{ secrets.DEAPI_TOKEN }}
+  YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+  YT_CLIENT_SECRET_VALUE: ${{ secrets.YT_CLIENT_SECRET_VALUE }}
+  YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+  DEAPI_TTS_MODEL: "Kokoro"
+  DEAPI_TTS_VOICE: "am_michael"
+
+jobs:
+  generate-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Python deps
+        run: pip install -r requirements.txt
+
+      - name: Restore unboxing history cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output/history/
+          key: story-history-kurukshetra-unboxing-${{ github.run_id }}
+          restore-keys: |
+            story-history-kurukshetra-unboxing-
+
+      - name: Generate & upload Short
+        run: |
+          TOPIC="${{ github.event.inputs.topic || '' }}"
+
+          if [ -n "$TOPIC" ]; then
+            python scripts/run_short.py --channel kurukshetra_unboxing --topic "$TOPIC" --upload --privacy public
+          else
+            python scripts/run_short.py --channel kurukshetra_unboxing --upload --privacy public
+          fi
+
+      - name: Save unboxing history cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: output/history/
+          key: story-history-kurukshetra-unboxing-${{ github.run_id }}
