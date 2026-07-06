@@ -50,8 +50,8 @@ PRESETS: dict[str, ChannelPreset] = {
     "general_stories": {
         "id": "general_stories",
         "label": "Original cinematic storytime Shorts with varied everyday themes",
-        "min_words": 1,
-        "tts_provider": "sfx",
+        "min_words": 105,
+        "tts_provider": "deapi",
         "tts_voice": "am_michael",
         "groq_system_hint": (
             "You write highly engaging original storytime Shorts for a broad general audience. "
@@ -307,8 +307,8 @@ PRESETS: dict[str, ChannelPreset] = {
         "id": "kurukshetra_unboxing",
         "label": "Premium mythological diorama unboxing Shorts",
         "language": "en",
-        "min_words": 105,
-        "tts_provider": "deapi",
+        "min_words": 1,
+        "tts_provider": "sfx",
         "tts_voice": "am_michael",
         "caption_font": "BebasNeue-Regular.ttf",
         "caption_font_name": "Bebas Neue",
