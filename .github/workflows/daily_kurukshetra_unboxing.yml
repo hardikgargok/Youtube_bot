@@ -60,7 +60,7 @@ jobs:
       - name: Generate Short
         run: |
           TOPIC="${{ github.event.inputs.topic || '' }}"
-          PUBLISH="${{ github.event.inputs.publish_to_youtube || 'true' }}"
+          PUBLISH="${{ github.event.inputs.publish_to_youtube || 'false' }}"
           UPLOAD_ARGS=""
 
           if [ "$PUBLISH" = "true" ]; then
